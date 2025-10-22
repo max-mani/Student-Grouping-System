@@ -1,0 +1,32 @@
+{
+  "name": "smart-team-formation",
+  "version": "1.0.0",
+  "description": "AI-powered student grouping system for optimal team formation",
+  "scripts": {
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start": "npm run dev",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build && cd ../backend && npm run build",
+    "clean": "python cleanup_old_files.py",
+    "setup": "npm run install-all && python convert_levels.py && cd student_team_clustering && python cluster_students.py",
+    "health": "curl http://localhost:5000/health"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "keywords": [
+    "team-formation",
+    "student-grouping",
+    "machine-learning",
+    "clustering",
+    "education",
+    "ai"
+  ],
+  "author": "Smart Team Formation Team",
+  "license": "MIT"
+}
