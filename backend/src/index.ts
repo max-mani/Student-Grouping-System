@@ -71,8 +71,13 @@ app.post('/form-teams', async (req, res) => {
 
   console.log(`Processing teams with size: ${teamSize}`);
 
-  // Try different Python commands
-  const pythonCommands = ['python3', 'python', 'py'];
+  // Try different Python commands (Windows and Unix friendly)
+  const pythonCommands: { cmd: string; args: string[] }[] = [
+    { cmd: 'py', args: ['-3'] }, // Windows launcher for Python 3
+    { cmd: 'python3', args: [] },
+    { cmd: 'python', args: [] },
+    { cmd: 'py', args: [] }
+  ];
   let pythonScript = path.join(__dirname, '../../model/predict_teams.py');
   
   // Check if the Python script exists
@@ -80,9 +85,12 @@ app.post('/form-teams', async (req, res) => {
     return res.status(500).json({ error: 'Python model script not found' });
   }
 
-  const runPythonScript = (pythonCmd: string) => {
+  const runPythonScript = (pythonCmd: { cmd: string; args: string[] }) => {
     return new Promise((resolve, reject) => {
-      const python = spawn(pythonCmd, [pythonScript, filePath, teamSize.toString()]);
+      const spawnArgs = [...pythonCmd.args, pythonScript, filePath, teamSize.toString()];
+      const python = spawn(pythonCmd.cmd, spawnArgs, {
+        env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
+      });
       let dataString = '';
       let errorString = '';
 
@@ -98,10 +106,36 @@ app.post('/form-teams', async (req, res) => {
       python.on('close', (code) => {
         if (code === 0) {
           try {
-            const results = JSON.parse(dataString);
+            let jsonText = '';
+            const trimmed = (dataString || '').toString().trim();
+
+            // Fast path: whole stdout is JSON
+            if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+              jsonText = trimmed;
+            } else {
+              // Try to find a JSON-looking line
+              const lines = trimmed.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+              const jsonLikeLine = [...lines].reverse().find(l => l.startsWith('{') && l.endsWith('}'));
+              if (jsonLikeLine) {
+                jsonText = jsonLikeLine;
+              } else {
+                // Fallback: slice from first { to last }
+                const firstIdx = trimmed.indexOf('{');
+                const lastIdx = trimmed.lastIndexOf('}');
+                if (firstIdx !== -1 && lastIdx !== -1 && lastIdx > firstIdx) {
+                  jsonText = trimmed.slice(firstIdx, lastIdx + 1);
+                }
+              }
+            }
+
+            if (!jsonText) {
+              throw new Error('No JSON found in Python output');
+            }
+
+            const results = JSON.parse(jsonText);
             resolve(results);
           } catch (error) {
-            reject(new Error(`Failed to parse Python output: ${error}`));
+            reject(new Error(`Failed to parse Python output: ${String(error)}\nSTDOUT: ${dataString}\nSTDERR: ${errorString}`));
           }
         } else {
           reject(new Error(`Python script failed with code ${code}: ${errorString}`));
@@ -122,13 +156,13 @@ app.post('/form-teams', async (req, res) => {
       console.log('Team formation successful');
       return res.json(results);
     } catch (error) {
-      console.log(`Failed with ${pythonCmd}:`, error);
+      console.log(`Failed with ${pythonCmd.cmd} ${pythonCmd.args.join(' ')}:`, error);
       continue;
     }
   }
 
   res.status(500).json({ 
-    error: 'Failed to run Python script. Please ensure Python is installed and accessible.' 
+    error: 'Failed to run Python script. Ensure Python 3 is installed and accessible (try running: "py -3 --version" on Windows or "python3 --version").'
   });
 });
 

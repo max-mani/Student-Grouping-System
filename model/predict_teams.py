@@ -12,7 +12,7 @@ def predict_teams(data_path: str, team_size: int):
     try:
         # Load data
         df = pd.read_csv(data_path)
-        print(f"✅ Loaded data with {len(df)} students")
+        print(f"Loaded data with {len(df)} students", file=sys.stderr, flush=True)
         
         # Get numeric columns
         numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
@@ -21,7 +21,7 @@ def predict_teams(data_path: str, team_size: int):
             df['dummy_feature'] = np.random.rand(len(df))
             numeric_columns = ['dummy_feature']
         
-        print(f"🔧 Using columns for features: {numeric_columns}")
+        print(f"Using columns for features: {numeric_columns}", file=sys.stderr, flush=True)
         
         # Prepare features
         X = df[numeric_columns].fillna(0).values
@@ -31,7 +31,7 @@ def predict_teams(data_path: str, team_size: int):
         kmeans = KMeans(n_clusters=n_clusters, random_state=42)
         clusters = kmeans.fit_predict(X)
         
-        print(f"✅ Clustering completed with {len(np.unique(clusters))} clusters")
+        print(f"Clustering completed with {len(np.unique(clusters))} clusters", file=sys.stderr, flush=True)
         
         # Assign teams based on clusters
         df['cluster'] = clusters
@@ -70,24 +70,22 @@ def predict_teams(data_path: str, team_size: int):
             'error': str(e)
         }
     
+    # IMPORTANT: Only print JSON to stdout so the Node process can parse it
     print(json.dumps(result))
     return 0
 
 if __name__ == '__main__':
-    print("🚀 Starting team prediction script...", flush=True)
+    print("Starting team prediction script...", file=sys.stderr, flush=True)
     if len(sys.argv) != 3:
-        error_msg = json.dumps({
-            'success': False,
-            'error': 'Usage: python predict_teams.py <data_path> <team_size>'
-        })
-        print(error_msg, flush=True)
+        # Print a user-friendly message to stderr and exit non-zero
+        print('Usage: python predict_teams.py <data_path> <team_size>', file=sys.stderr, flush=True)
         sys.exit(1)
     
     data_path = sys.argv[1]
     team_size = int(sys.argv[2])
-    print(f"📁 Data path: {data_path}", flush=True)
-    print(f"👥 Team size: {team_size}", flush=True)
+    print(f"Data path: {data_path}", file=sys.stderr, flush=True)
+    print(f"Team size: {team_size}", file=sys.stderr, flush=True)
     
     result = predict_teams(data_path, team_size)
-    print("✅ Script completed", flush=True)
+    print("Script completed", file=sys.stderr, flush=True)
     sys.exit(result)

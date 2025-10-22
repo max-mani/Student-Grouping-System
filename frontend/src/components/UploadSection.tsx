@@ -75,10 +75,10 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/30 p-10">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Student Data</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">Upload Student Data</h2>
           <p className="text-gray-600">Upload your CSV file and configure team settings</p>
         </div>
 
@@ -89,12 +89,12 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
               Student Data File
             </label>
             <div
-              className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
+              className={`relative border-2 border-dashed rounded-xl p-10 text-center transition-all duration-300 ${
                 dragActive
-                  ? 'border-indigo-500 bg-indigo-50'
+                  ? 'border-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 scale-105'
                   : file
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-300 hover:border-indigo-400 hover:bg-gray-50'
+                  ? 'border-emerald-500 bg-gradient-to-r from-emerald-50 to-green-50'
+                  : 'border-gray-300 hover:border-purple-400 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:scale-102'
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
@@ -110,15 +110,15 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
               
               {file ? (
                 <div className="space-y-2">
-                  <svg className="w-12 h-12 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-emerald-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-green-600 font-medium">{file.name}</p>
+                  <p className="text-emerald-600 font-medium">{file.name}</p>
                   <p className="text-sm text-gray-500">Click to change file</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <svg className="w-12 h-12 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                   </svg>
                   <div>
@@ -136,7 +136,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
             <label className="block text-sm font-semibold text-gray-700 mb-3">
               Team Configuration
             </label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm text-gray-600 mb-2">Team Size</label>
                 <div className="relative">
@@ -146,18 +146,18 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
                     max="8"
                     value={teamSize}
                     onChange={(e) => setTeamSize(parseInt(e.target.value))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center space-x-2 text-sm text-gray-600 bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-3 rounded-lg border border-purple-200">
+                <svg className="w-3 h-3 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Recommended: 3-5 members per team</span>
@@ -168,7 +168,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
           {/* Error Display */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3">
-              <svg className="w-5 h-5 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p className="text-red-700 text-sm">{error}</p>
@@ -182,12 +182,12 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
             className={`w-full flex items-center justify-center px-6 py-4 rounded-lg font-semibold text-white transition-all duration-200 ${
               loading || !file
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
+                : 'bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
             }`}
           >
             {loading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -195,7 +195,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({ onTeamsGenerated }) => {
               </>
             ) : (
               <>
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 Generate Optimal Teams
